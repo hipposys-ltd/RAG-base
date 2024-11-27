@@ -7,6 +7,7 @@ from typing import Iterable, Optional
 from urllib.parse import urlparse
 
 from app.databases.vector.base import BaseVectorDatabase
+from app.utils.logger import Logger
 
 
 class Chroma(BaseVectorDatabase, LangChroma):
@@ -26,7 +27,7 @@ class Chroma(BaseVectorDatabase, LangChroma):
         password = parsed_uri.password
     
         # Construct and return the client object.
-        print(f'Connecting to Chroma database at {host}:{port}')
+        Logger().get_logger().debug(f'Connecting to Chroma database at {host}:{port}')
         return chromadb.HttpClient(
             host=host,
             port=port,

@@ -10,6 +10,7 @@ from langchain_core.prompts.prompt import PromptTemplate
 from app.databases.vector import VectorDB
 from app.databases.postgres import Database
 from app.models import ChatModel
+from app.utils.logger import Logger
 
 
 PROMPT_MESSAGE = """When answering the user question using data from the tools, be sure to:
@@ -122,7 +123,7 @@ class ChatMessage:
             # Known events that we ignore.
             case 'on_chat_model_start' | 'on_chain_start' | 'on_chain_end' | 'on_chat_model_stream' \
                 | 'on_chat_model_end' | 'on_chain_stream' | 'on_tool_start' | 'on_tool_end':
-                print('Ignoring message', event['event'])
+                Logger().get_logger().debug('Ignoring message', event['event'])
                 return None
             # Unknown events.
             case _:
@@ -141,7 +142,7 @@ class ChatMessage:
 
         # If the message is a tool call, just print a debug message.
         if content_type in ('tool_use', 'tool_call'):
-            print('Stream.tool_calls:', event['data']['chunk'].tool_calls, flush=True)
+            Logger().get_logger().debug('Stream.tool_calls:', event['data']['chunk'].tool_calls, flush=True)
             return None
         else:
             return ChatMessage(LLMEventType.CHAT_CHUNK, cls.Sender.AI, content)

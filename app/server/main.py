@@ -10,6 +10,7 @@ from app.server.chat import chat_router
 from app.server.embeddings import embeddings_router
 from app.databases.postgres import Database
 from app.utils.config import Config
+from app.utils.logger import Logger
 
 
 @asynccontextmanager
@@ -17,7 +18,7 @@ async def lifespan(app: FastAPI):
     """Run the database setup and teardown."""
     
     await Database.setup()
-    print('Database setup complete')
+    Logger().get_logger().info('Database setup complete')
 
     yield
     # Optionally add teardown code here
